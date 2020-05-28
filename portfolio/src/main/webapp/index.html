@@ -5,18 +5,42 @@
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
   </head>
   <body>
     <div id="content">
       <h1>Charles Lovett's Portfolio</h1>
-      <p>This is is the beginnig of my portfolio.</p>
-      <p>Click below to get a Fun Fact about me:</p>
+      <p>This Portfolio contians my life growing up and during college. Hope you enjoy learning a little bit about me.</p>
+      <p>Real Quick if you want to know some fun facts about me press the button below:</p>
       <button onclick="addRandomFunFact()">Fun Facts</button>
       <div id="greeting-container"></div>
 
-      <p> My name is Charles Lovett and I am currently a rising Junior Computer Science  Major at the Illustrious Howard University. </p>
-      <p> This is a picture of my adorably annoying dog Gracie </p>
-      <img src = "images/Gracie.JPG" style="width:600px;height:600px;" />
+    
+    </div>
+    <div id='choice' >
+        <table class='center' style="width:100%">
+            <tr>
+                <th>Growing Up</th>
+                <th>College Life </th>
+            </tr>
+            <tr>
+                <td>
+                    <a href="growing-up.html">
+                    <img src="images/growing.JPG" style="width:500px;height:600px;"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="college.html">
+                    <img src="images/Collegelife2.jpg" style="width:500px;height:600px;"/>
+                    </a>
+                </td>
+            </tr>
+        </table>
+
     </div>
   </body>
 </html>
