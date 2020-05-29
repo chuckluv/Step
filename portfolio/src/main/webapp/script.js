@@ -17,12 +17,14 @@
  */
 function addRandomFunFact() {
   const funFacts =
-      ['Favorite TV show is Game of Thrones', 'Favorite Sport is Football', 'I have fractured every finger on my left hand', 'I have played the double bass since Third Grade'];
+      ['Favorite TV show is Game of Thrones', 'Favorite Sport is Football', 
+      'I have fractured every finger on my left hand', 
+      'I have played the double bass since Third Grade'];
 
   // Pick a random greeting.
   const funFact = funFacts[Math.floor(Math.random() * funFacts.length)];
 
   // Add it to the page.
-  const factContainer = document.getElementById('greeting-container');
+  const factContainer = document.getElementById('fun-fact-container');
   factContainer.innerText = funFact;
 }
