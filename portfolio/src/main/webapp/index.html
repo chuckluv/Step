@@ -5,14 +5,41 @@
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+  
   </head>
   <body>
     <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+      <h1>Charles Lovett's Portfolio</h1>
+        <p>This Portfolio contains my life growing up and during college. Hope you enjoy learning a little bit about me.</p>
+        <p>Real Quick if you want to know some fun facts about me press the button below:</p>
+        <button onclick="addRandomFunFact()">Fun Facts</button>
+      <div id="fun-fact-container"></div>
+
+    
+    </div>
+    <!--give choice on which part of my life people wanna see-->
+    <div  >
+        <table style="width:100%">
+            <tr>
+                <th>Growing Up</th>
+                <th>College Life </th>
+            </tr>
+            <tr>
+                <td>
+                    
+                    <a href="growing-up.html">
+                    <img class ="center" src="images/growing.JPG" style="width:500px;height:600px;"/>
+                    </a>
+                    
+                </td>
+                <td>
+                    <a href="college.html">
+                    <img class = "center" src="images/Collegelife2.jpg" style="width:500px;height:600px;"/>
+                    </a>
+                </td>
+            </tr>
+        </table>
+
     </div>
   </body>
 </html>
