@@ -10,6 +10,15 @@
   <body>
     <div id="content">
       <h1>Charles Lovett's Portfolio</h1>
+      <button onclick="getComments()">Comments</button>
+      <div id="fetch-comment"></div>
+      <form action="/data" method="POST">
+          <p>Post a comment</p>
+          <input type="text" name="comment">
+          <br/><br/>
+
+      <input type="submit" />
+      </form>
         <p>This Portfolio contains my life growing up and during college. Hope you enjoy learning a little bit about me.</p>
         <p>Real Quick if you want to know some fun facts about me press the button below:</p>
         <button onclick="addRandomFunFact()">Fun Facts</button>

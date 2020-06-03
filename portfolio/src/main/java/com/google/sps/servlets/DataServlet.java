@@ -13,7 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
+import java.util.*;  
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,10 +23,42 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+   private ArrayList<String> comments;
+    
+   @Override
+   public void init(){
+        comments = new ArrayList<String>();
+        
+
+   }
+
+    private String convertToJson(ArrayList<String> com){
+        
+        String json = "{ ";
+        
+           json += "\"comment1\": ";
+    json += "\"" + com+"\"";
+        
+        json += "}";
+        return json;
+
+    }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
+     String json = convertToJson(comments);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
+  }
+
+   @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  String userComment = request.getParameter("comment");
+  comments.add(userComment);
+   response.sendRedirect("/index.html");
+
+  
+  
+  
   }
 }
