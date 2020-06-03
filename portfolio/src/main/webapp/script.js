@@ -34,24 +34,36 @@ function addRandomFunFact() {
 
     fetch('/data').then(response => response.json()).then((com) => {
   //console.log(JSON.stringify(com.comments))
-
-   
   const commentList =document.getElementById('fetch-comment');
-  commentList.innerHTML = " ";
-  commentList.appendChild(
-      createListElement( 'Comment: '+ com.comment1));
+   com.forEach((comment) => {
+      commentList.appendChild(createTaskElement(comment));
+    })
+  
     });
  }
+
+function createTaskElement(comment) {
+  const taskElement = document.createElement('li');
+  taskElement.className = 'comment';
+
+  const titleElement = document.createElement('span');
+  titleElement.innerText = comment.title;
 /*
-async function getComments() {
-  const response = await fetch('/data');
-  const quote = await response.json();
-  const commentList =document.getElementById('fetch-comment');
-  commentList.appendChild(
-      createListElement("People"));
-    
-  }
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.innerText = 'Delete';
+  deleteButtonElement.addEventListener('click', () => {
+    deleteTask(comment);
+
+    // Remove the task from the DOM.
+    taskElement.remove();
+  });
 */
+  taskElement.appendChild(titleElement);
+  //taskElement.appendChild(deleteButtonElement);
+  return taskElement;
+}
+
+
 function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
