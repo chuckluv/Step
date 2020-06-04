@@ -19,59 +19,70 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.sps.data.Post;
 import com.google.gson.Gson;
-import java.util.*;  
+import com.google.sps.data.Post;
 import java.io.IOException;
+import java.util.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
+@WebServlet("/Comments")
 public class DataServlet extends HttpServlet {
-  
+  private int max = 3;
+  private static final String COMMENTS_ENTITY_NAME = "Comments";
+  private static final String TIMESTAMP_PROPERTY_KEY = "timestamp";
+  private static final String COMMENT_PROPERTY_KEY = "comment";
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      Query query = new Query("Comments").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query(COMMENTS_ENTITY_NAME).addSort(TIMESTAMP_PROPERTY_KEY, SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-
+    int count = 0;
     List<Post> comments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
-      String comment = (String) entity.getProperty("comment");
-      long timestamp = (long) entity.getProperty("timestamp");
-
+      String comment = (String) entity.getProperty(COMMENT_PROPERTY_KEY);
+      long timestamp = (long) entity.getProperty(TIMESTAMP_PROPERTY_KEY);
+      if (count >= max) {
+        break;
+      }
       Post post = new Post(id, comment, timestamp);
       comments.add(post);
+      count += 1;
     }
 
     Gson gson = new Gson();
 
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(comments));
-
   }
 
-   @Override
+  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-  String userComment = request.getParameter("comment");
-  long timestamp = System.currentTimeMillis();
+    String userComment = request.getParameter(COMMENT_PROPERTY_KEY);
+    long timestamp = System.currentTimeMillis();
+    String maxString = request.getParameter("maxnum");
+    if (userComment != null) {
+      Entity taskEntity = new Entity(COMMENTS_ENTITY_NAME);
+      taskEntity.setProperty(COMMENT_PROPERTY_KEY, userComment);
+      taskEntity.setProperty(TIMESTAMP_PROPERTY_KEY, timestamp);
 
-  Entity taskEntity = new Entity("Comments");
-  taskEntity.setProperty("comment", userComment);
-  taskEntity.setProperty("timestamp", timestamp);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(taskEntity);
+    } else if (maxString != null) {
+      try {
+        max = Integer.parseInt(maxString);
 
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  datastore.put(taskEntity);
-  //comments.add(userComment);
-   response.sendRedirect("/index.html");
+      } catch (NumberFormatException e) {
+        System.out.println("Could not convert to int: " + maxString);
+        max = 1;
+      }
+    }
 
-  
-  
-  
+    response.sendRedirect("/index.html");
   }
 }

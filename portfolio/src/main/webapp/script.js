@@ -30,25 +30,23 @@ function addRandomFunFact() {
   factContainer.innerText = funFact;
 }
 
- function getComments() {
-
-    fetch('/data').then(response => response.json()).then((com) => {
-  //console.log(JSON.stringify(com.comments))
-  const commentList =document.getElementById('fetch-comment');
-   com.forEach((comment) => {
+function getComments() {
+  fetch('/Comments').then(response => response.json()).then((com) => {
+    const commentList = document.getElementById('fetch-comment');
+    com.forEach((comment) => {
       commentList.appendChild(createTaskElement(comment));
     })
-  
-    });
- }
+  });
+}
 
 function createTaskElement(comment) {
   const taskElement = document.createElement('li');
+
   taskElement.className = 'comment';
 
   const titleElement = document.createElement('span');
   titleElement.innerText = comment.title;
-/*
+
   const deleteButtonElement = document.createElement('button');
   deleteButtonElement.innerText = 'Delete';
   deleteButtonElement.addEventListener('click', () => {
@@ -57,9 +55,9 @@ function createTaskElement(comment) {
     // Remove the task from the DOM.
     taskElement.remove();
   });
-*/
+
   taskElement.appendChild(titleElement);
-  //taskElement.appendChild(deleteButtonElement);
+  taskElement.appendChild(deleteButtonElement);
   return taskElement;
 }
 
@@ -68,4 +66,9 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+function deleteTask(task) {
+  const params = new URLSearchParams();
+  params.append('id', task.id);
+  fetch('/delete-data', {method: 'POST', body: params});
 }
