@@ -19,6 +19,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import com.google.sps.data.Post;
 import java.io.IOException;
@@ -31,28 +32,29 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/Comments")
 public class DataServlet extends HttpServlet {
-  private int max = 3;
+  private int max=5;
   private static final String COMMENTS_ENTITY_NAME = "Comments";
   private static final String TIMESTAMP_PROPERTY_KEY = "timestamp";
   private static final String COMMENT_PROPERTY_KEY = "comment";
+  private static final String COMMENT_PARAMETER_NAME = "comment";
+  private static final String MAX_COMMENTS_PARAMETER_NAME = "maxnum";
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query(COMMENTS_ENTITY_NAME).addSort(TIMESTAMP_PROPERTY_KEY, SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    int count = 0;
+    
     List<Post> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
+    FetchOptions fetchOptions = FetchOptions.Builder.withLimit(max);
+    for (Entity entity : results.asIterable(fetchOptions)) {
       long id = entity.getKey().getId();
       String comment = (String) entity.getProperty(COMMENT_PROPERTY_KEY);
       long timestamp = (long) entity.getProperty(TIMESTAMP_PROPERTY_KEY);
-      if (count >= max) {
-        break;
-      }
+     
       Post post = new Post(id, comment, timestamp);
       comments.add(post);
-      count += 1;
+     
     }
 
     Gson gson = new Gson();
@@ -63,9 +65,9 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String userComment = request.getParameter(COMMENT_PROPERTY_KEY);
+    String userComment = request.getParameter(COMMENT_PARAMETER_NAME);
     long timestamp = System.currentTimeMillis();
-    String maxString = request.getParameter("maxnum");
+    String maxString = request.getParameter(MAX_COMMENTS_PARAMETER_NAME);
     if (userComment != null) {
       Entity taskEntity = new Entity(COMMENTS_ENTITY_NAME);
       taskEntity.setProperty(COMMENT_PROPERTY_KEY, userComment);
