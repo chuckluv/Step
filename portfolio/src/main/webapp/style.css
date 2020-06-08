@@ -72,11 +72,25 @@ video{
   }
 }
 
-
 table, th, td {
   
   text-align: center;
 }
 
+.comment {
+  border: black;
+  display: flex;
+  margin: 10px;
+  padding: 10px;
+  width: 300px;
+  text-align: center;
+}
 
+.comment span {
+  flex-grow: 1;
+}
+
+ul{
+    text-align: center;
+}
 

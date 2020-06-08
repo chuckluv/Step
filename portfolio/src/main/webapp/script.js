@@ -16,10 +16,11 @@
  * Adds a random greeting to the page.
  */
 function addRandomFunFact() {
-  const funFacts =
-      ['Favorite TV show is Game of Thrones', 'Favorite Sport is Football', 
-      'I have fractured every finger on my left hand', 
-      'I have played the double bass since Third Grade'];
+  const funFacts = [
+    'Favorite TV show is Game of Thrones', 'Favorite Sport is Football',
+    'I have fractured every finger on my left hand',
+    'I have played the double bass since Third Grade'
+  ];
 
   // Pick a random greeting.
   const funFact = funFacts[Math.floor(Math.random() * funFacts.length)];
@@ -27,4 +28,47 @@ function addRandomFunFact() {
   // Add it to the page.
   const factContainer = document.getElementById('fun-fact-container');
   factContainer.innerText = funFact;
+}
+
+function getComments() {
+  fetch('/Comments').then(response => response.json()).then((com) => {
+    const commentList = document.getElementById('fetch-comment');
+    com.forEach((comment) => {
+      commentList.appendChild(createTaskElement(comment));
+    })
+  });
+}
+
+function createTaskElement(comment) {
+  const taskElement = document.createElement('li');
+
+  taskElement.className = 'comment';
+
+  const titleElement = document.createElement('span');
+  titleElement.innerText = comment.title;
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.innerText = 'Delete';
+  deleteButtonElement.addEventListener('click', () => {
+    deleteTask(comment);
+
+    // Remove the task from the DOM.
+    taskElement.remove();
+  });
+
+  taskElement.appendChild(titleElement);
+  taskElement.appendChild(deleteButtonElement);
+  return taskElement;
+}
+
+
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
+function deleteTask(task) {
+  const params = new URLSearchParams();
+  params.append('id', task.id);
+  fetch('/delete-data', {method: 'POST', body: params});
 }
