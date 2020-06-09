@@ -31,15 +31,18 @@ function addRandomFunFact() {
 }
 
 function getComments() {
+   
+     
   fetch('/Comments').then(response => response.json()).then((com) => {
     const commentList = document.getElementById('fetch-comment');
     com.forEach((comment) => {
-      commentList.appendChild(createTaskElement(comment));
+      commentList.appendChild(createCommentElement(comment));
     })
   });
+  getImage();
 }
 
-function createTaskElement(comment) {
+function createCommentElement(comment) {
   const taskElement = document.createElement('li');
 
   taskElement.className = 'comment';
@@ -50,7 +53,7 @@ function createTaskElement(comment) {
   const deleteButtonElement = document.createElement('button');
   deleteButtonElement.innerText = 'Delete';
   deleteButtonElement.addEventListener('click', () => {
-    deleteTask(comment);
+    deleteComment(comment);
 
     // Remove the task from the DOM.
     taskElement.remove();
@@ -62,13 +65,21 @@ function createTaskElement(comment) {
 }
 
 
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
-}
-function deleteTask(task) {
+function deleteComment(task) {
   const params = new URLSearchParams();
   params.append('id', task.id);
   fetch('/delete-data', {method: 'POST', body: params});
+}
+
+function getImage(){
+  
+    fetch('/blob-url')
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUploadUrl) => {
+        const messageForm = document.getElementById('uploaded-image');
+        messageForm.action = imageUploadUrl;
+       // messageForm.classList.remove('hidden');
+      });
 }

@@ -7,30 +7,35 @@
     <script src="script.js"></script>
   
   </head>
-  <body onload="getComments()">
-    <div id="content">
+  <body   onload="getComments()" >
+    <div id="content" >
       <h1>Charles Lovett's Portfolio</h1>
       
       <form action="/Comments" method="POST">
-           
-          
           <p>Post a comment</p>
-          <input type="text" name="comment">
+          <input type="text" name="comment" >
           <br/><br/>
-      <input type="submit" />
-     
+          <input type="submit" />
       </form>
 
       <form action="/Comments" method="POST">
           <p>Maxium comments</p>
-          <input type="number" name="maxnum">
+          <input type="number" name="maxnum" >
           <br/><br/>
-          <input type="submit" />
+          <input type="submit" />  
       </form>
 
       <br/><br/>
       
       <ul id="fetch-comment"></ul>
+
+      <form id="uploaded-image" method="POST" enctype="multipart/form-data" >
+          <br/><br/>
+          <p>Upload Image</p>
+          <input type="file" name="images">
+          <br/><br/>
+          <input type="submit" />
+      </form>
 
         <p>This Portfolio contains my life growing up and during college. Hope you enjoy learning a little bit about me.</p>
         <p>Real Quick if you want to know some fun facts about me press the button below:</p>
