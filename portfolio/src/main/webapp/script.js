@@ -31,13 +31,27 @@ function addRandomFunFact() {
 }
 
 function getComments() {
-   
-     
-  fetch('/Comments').then(response => response.json()).then((com) => {
-    const commentList = document.getElementById('fetch-comment');
-    com.forEach((comment) => {
-      commentList.appendChild(createCommentElement(comment));
-    })
+  fetch('/login').then(response => response.json()).then((login) => {
+    console.log(login.status);
+    if (login.status) {
+      fetch('/Comments').then(response => response.json()).then((com) => {
+        const commentList = document.getElementById('fetch-comment');
+
+        com.forEach((comment) => {
+          commentList.appendChild(createCommentElement(comment));
+        })
+      });
+      var str = 'Log Out';
+      var link = str.link(login.logoutUrl);
+      document.getElementById('login').innerHTML = link;
+      console.log(login.logoutUrl);
+
+    } else {
+      var str = 'Log In';
+      var link = str.link(login.loginUrl);
+      document.getElementById('login').innerHTML = link;
+      console.log(login.loginUrl);
+    }
   });
   getImage();
 }
@@ -48,7 +62,7 @@ function createCommentElement(comment) {
   taskElement.className = 'comment';
 
   const titleElement = document.createElement('span');
-  titleElement.innerText = comment.title;
+  titleElement.innerText = comment.title + ' - ' + comment.email;
 
   const deleteButtonElement = document.createElement('button');
   deleteButtonElement.innerText = 'Delete';
@@ -71,15 +85,13 @@ function deleteComment(task) {
   fetch('/delete-data', {method: 'POST', body: params});
 }
 
-function getImage(){
-  
-    fetch('/blob-url')
+function getImage() {
+  fetch('/blob-url')
       .then((response) => {
         return response.text();
       })
       .then((imageUploadUrl) => {
         const messageForm = document.getElementById('uploaded-image');
         messageForm.action = imageUploadUrl;
-       // messageForm.classList.remove('hidden');
       });
 }
