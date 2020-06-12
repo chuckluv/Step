@@ -31,11 +31,27 @@ function addRandomFunFact() {
 }
 
 function getComments() {
-  fetch('/Comments').then(response => response.json()).then((com) => {
-    const commentList = document.getElementById('fetch-comment');
-    com.forEach((comment) => {
-      commentList.appendChild(createTaskElement(comment));
-    })
+  fetch('/login').then(response => response.json()).then((login) => {
+    console.log(login.status);
+    if (login.status) {
+      fetch('/Comments').then(response => response.json()).then((com) => {
+        const commentList = document.getElementById('fetch-comment');
+
+        com.forEach((comment) => {
+          commentList.appendChild(createCommentElement(comment));
+        })
+      });
+      var str = 'Log Out';
+      var link = str.link(login.logoutUrl);
+      document.getElementById('login').innerHTML = link;
+      console.log(login.logoutUrl);
+
+    } else {
+      var str = 'Log In';
+      var link = str.link(login.loginUrl);
+      document.getElementById('login').innerHTML = link;
+      console.log(login.loginUrl);
+    }
   });
 }
 
@@ -45,7 +61,7 @@ function createTaskElement(comment) {
   taskElement.className = 'comment';
 
   const titleElement = document.createElement('span');
-  titleElement.innerText = comment.title;
+  titleElement.innerText = comment.title + ' - ' + comment.email;
 
   const deleteButtonElement = document.createElement('button');
   deleteButtonElement.innerText = 'Delete';

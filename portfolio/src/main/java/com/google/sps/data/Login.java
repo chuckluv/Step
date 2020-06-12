@@ -15,16 +15,14 @@
 package com.google.sps.data;
 
 /** An item on a todo list. */
-public final class Post {
-  private final long id;
-  private final String title;
-  private final long timestamp;
-  private final String email;
+public final class Login {
+  private final boolean status;
+  private final String loginUrl;
+  private final String logoutUrl;
 
-  public Post(long id, String title, long timestamp, String email) {
-    this.id = id;
-    this.title = title;
-    this.timestamp = timestamp;
-    this.email = email;
+  public Login(boolean status, String loginUrl, String logoutUrl) {
+    this.status = status;
+    this.loginUrl = loginUrl;
+    this.logoutUrl = logoutUrl;
   }
 }
