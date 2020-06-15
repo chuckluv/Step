@@ -37,9 +37,11 @@ public class DataServlet extends HttpServlet {
   private static final String COMMENTS_ENTITY_NAME = "Comments";
   private static final String TIMESTAMP_PROPERTY_KEY = "timestamp";
   private static final String COMMENT_PROPERTY_KEY = "comment";
+  private static final String EMAIL_PROPERTY_KEY = "Email";
   private static final String COMMENT_PARAMETER_NAME = "comment";
   private static final String MAX_COMMENTS_PARAMETER_NAME = "maxnum";
-  private int maxNumberOfComments = 5;
+  private static final int DEFAULT_MAX_COMMENTS = 5;
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query =
@@ -47,14 +49,26 @@ public class DataServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    String maxString = request.getParameter(MAX_COMMENTS_PARAMETER_NAME);
+    int max = DEFAULT_MAX_COMMENTS;
+    if (maxString != null) {
+      try {
+        max = Integer.parseInt(maxString);
 
+      } catch (NumberFormatException e) {
+        System.out.println("Could not convert to int|" + maxString + "|");
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().printf("%s Must be a integer", MAX_COMMENTS_PARAMETER_NAME);
+        return;
+      }
+      }
     List<Post> comments = new ArrayList<>();
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(max);
     for (Entity entity : results.asIterable(fetchOptions)) {
       long id = entity.getKey().getId();
       String comment = (String) entity.getProperty(COMMENT_PROPERTY_KEY);
       long timestamp = (long) entity.getProperty(TIMESTAMP_PROPERTY_KEY);
-      String email = (String) entity.getProperty("Email");
+      String email = (String) entity.getProperty(EMAIL_PROPERTY_KEY);
       Post post = new Post(id, comment, timestamp, email);
       comments.add(post);
     }
@@ -74,18 +88,10 @@ public class DataServlet extends HttpServlet {
       Entity taskEntity = new Entity(COMMENTS_ENTITY_NAME);
       taskEntity.setProperty(COMMENT_PROPERTY_KEY, userComment);
       taskEntity.setProperty(TIMESTAMP_PROPERTY_KEY, timestamp);
-      taskEntity.setProperty("Email", userEmail);
+      taskEntity.setProperty(EMAIL_PROPERTY_KEY, userEmail);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(taskEntity);
-    } else if (maxString != null) {
-      try {
-        max = Integer.parseInt(maxString);
-
-      } catch (NumberFormatException e) {
-        System.out.println("Could not convert to int|" + maxString + "|");
-        maxNumberOfComments = 5;
-      }
     }
 
     response.sendRedirect("/index.html");

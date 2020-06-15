@@ -30,11 +30,13 @@ function addRandomFunFact() {
   factContainer.innerText = funFact;
 }
 
-function getComments() {
+
+function getComments( maxnum=5) {
+    
   fetch('/login').then(response => response.json()).then((login) => {
-    console.log(login.status);
+   
     if (login.status) {
-      fetch('/Comments').then(response => response.json()).then((com) => {
+      fetch(`/Comments?maxnum=${maxnum}`).then(response => response.json()).then((com) => {
         const commentList = document.getElementById('fetch-comment');
 
         com.forEach((comment) => {
@@ -44,7 +46,7 @@ function getComments() {
       var str = 'Log Out';
       var link = str.link(login.logoutUrl);
       document.getElementById('login').innerHTML = link;
-      console.log(login.logoutUrl);
+     
 
     } else {
       var str = 'Log In';
@@ -55,7 +57,20 @@ function getComments() {
   });
 }
 
-function createTaskElement(comment) {
+function clearComments(){
+const commentcontainer= document.getElementById('fetch-comment');
+while(commentcontainer.firstChild){
+    commentcontainer.removeChild(commentcontainer.lastChild);
+}
+}
+function listCommentsfromInput(){
+  var maxnum =  document.getElementById('maxnum').value;
+  clearComments();
+  getComments(maxnum);
+
+}
+
+function createCommentElement(comment) {
   const taskElement = document.createElement('li');
 
   taskElement.className = 'comment';

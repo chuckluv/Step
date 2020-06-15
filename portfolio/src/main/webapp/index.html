@@ -20,12 +20,11 @@
      
       </form>
 
-      <form action="/Comments" method="POST">
-          <p>Maxium comments</p>
-          <input type="number" name="maxnum">
-          <br/><br/>
-          <input type="submit" />
-      </form>
+      
+      
+      <label for="maxcomments">Comments</label>
+      <input type="number" id="maxnum" value="6">
+      <button onclick="listCommentsfromInput()">Refresh Comments</button>
 
       <br/><br/>
       <ul id="login"></ul>
